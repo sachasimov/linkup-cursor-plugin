@@ -24,9 +24,9 @@ This plugin ships:
 
 ## Remote vs local MCP
 
-The plugin uses Linkup's [hosted remote MCP endpoint](https://docs.linkup.so/pages/integrations/mcp/mcp#remote-mcp) — the recommended setup, with no Node/npx dependency. It authenticates with the `Authorization: Bearer ${env:LINKUP_API_KEY}` header.
+The plugin uses Linkup's [hosted remote MCP endpoint](https://docs.linkup.so/pages/integrations/mcp/mcp#remote-mcp) — the recommended setup, with no Node/npx dependency. It authenticates with the `Authorization: Bearer ${env:LINKUP_API_KEY}` header and exposes all four tools.
 
-If your Cursor connection to the hosted endpoint gets tombstoned with repeated SSE `404`s (a known issue with older versions of the hosted endpoint, which should return `405` for the optional server stream), use the **local `npx` fallback** instead — it runs `linkup-mcp-server` locally over stdio (needs Node.js v24+) and exposes the same four tools. See `/linkup-setup` for both configs.
+Prefer to run it locally instead? A local `npx` alternative (runs `linkup-mcp-server` over stdio, needs Node.js v24+) is documented in `/linkup-setup`.
 
 ## Commands
 

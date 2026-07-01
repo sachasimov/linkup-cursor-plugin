@@ -50,9 +50,9 @@ The plugin ships this `mcp.json` at its root (auto-discovered). It uses Linkup's
 
 This exposes the `linkup-search`, `linkup-fetch`, `linkup-research`, and `linkup-get-research` tools.
 
-### Local MCP fallback (npx / stdio)
+### Local MCP alternative (npx / stdio)
 
-If the hosted endpoint gets tombstoned in your Cursor with repeated SSE `404`s (older versions of the hosted endpoint return `404` instead of the spec-compliant `405` for the optional server stream, which Cursor treats as a dead session), run the MCP server locally instead. Needs Node.js v24+:
+Prefer not to depend on the hosted endpoint? Run the MCP server locally instead (needs Node.js v24+):
 
 ```json
 {
