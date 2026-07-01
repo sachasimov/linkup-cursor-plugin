@@ -1,26 +1,30 @@
 ---
 name: fetch-url
-description: Use this skill when you already know the exact URL and need its content as clean Markdown — a pricing page, an article, a docs page, or a URL you found in a previous step. Uses the Linkup MCP `linkup-fetch` tool. Prefer this over web-search when the URL is known.
+description: Use when you already know the exact URL and need its content as clean Markdown — a pricing page, article, docs page, PDF, or a URL found in a previous step. Uses the Linkup `linkup-fetch` MCP tool. Prefer this over web-search when the URL is known; prefer bulk-extract when you need many structured rows from one listing page.
 ---
 
 # Linkup Fetch
 
-When you already have the exact URL, use `linkup-fetch` instead of search. It is faster, cheaper, and purpose-built for single-page extraction — it returns the page as clean Markdown.
+When you already have the exact URL, use the **`linkup-fetch` MCP tool** instead of search. It is faster and cheaper, and returns the page as clean Markdown (with JavaScript rendering, PDF support, and optional image extraction).
 
-## When to use fetch vs search
+## When to use fetch vs the alternatives
 
-| Use `fetch-url` when... | Use `web-search` when... |
+| Use `fetch-url` when... | Use instead... |
 | --- | --- |
-| You have a specific URL and want its content | You don't know which URL has the answer |
-| Scraping a known page (pricing, article, docs) | You need results from multiple pages |
-| A previous step found a URL you now need to read | You need Linkup to find and extract for you |
+| You have one URL and want its content as Markdown | — |
+| You don't know which URL has the answer | `web-search` |
+| You need many structured records from one listing page (team, catalog, jobs) | `bulk-extract` (`/v1/extract`) |
+| You need to discover URLs and then scrape them | `web-search` with `depth: deep` |
 
 ## How to call it
 
-Pass the URL to `linkup-fetch`. **Default `renderJs` to true** — many sites load content via JavaScript, and the small latency cost is almost always worth the reliability. Only turn it off when speed matters more than completeness on a known-static page.
+Pass the URL to `linkup-fetch`. **Default JavaScript rendering to on** — many sites load content client-side, and the small latency cost is almost always worth the reliability. Turn it off only when speed matters more on a known-static page.
+
+Important: fetch reads page *content*; it cannot produce structured JSON from a page. If you need structured fields from a known page, use `bulk-extract` (`/v1/extract`) or the Search API with `outputType: structured`.
 
 ## After fetching
 
-- The result is Markdown. Extract the specific fields the task needs rather than dumping the whole page back to the user.
-- Keep the source URL so any claim you make can be verified.
-- If the page is one of several you need, and you only have this one URL, fetch it here; if you need to discover *and* scrape multiple pages, switch to `web-search` with `deep`.
+- Extract only the fields the task needs; don't dump the whole page back to the user.
+- Keep the source URL so every claim can be verified.
+
+For the full endpoint reference, read `reference/knowledge/LINKUP_API_REFERENCE.md` (Fetch API section) at the plugin root.

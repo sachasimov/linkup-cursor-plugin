@@ -1,32 +1,33 @@
 # Linkup plugin for Cursor
 
-Give Cursor real-time access to the web through [Linkup](https://linkup.so) — an agentic search API that finds, reads, and researches live web pages and returns accurate, sourced results.
+Give Cursor reliable, real-time access to the web through [Linkup](https://www.linkup.so) — a web search API built for agents. It searches the live web, reads pages, runs multi-source deep research, extracts structured records, and returns cited results.
 
-This plugin bundles:
+This plugin ships three things:
 
-- The **Linkup MCP server**, which adds two tools to the agent:
-  - `linkup-search` — agentic web search with adjustable depth
-  - `linkup-fetch` — fetch any URL as clean Markdown
-- Three **skills** that teach the agent how to use Linkup well:
+1. **The Linkup MCP server** — adds `linkup-search` and `linkup-fetch` tools to the agent.
+2. **Five skills** — concise, on-demand entry points that teach the agent *how* to use Linkup well.
+3. **A bundled knowledge pack** (`reference/`) — the full query, endpoint, and workflow knowledge from [linkup-for-agents](https://github.com/LinkupPlatform/linkup-for-agents), plus 18 ready-to-adapt workflow recipes. The skills route into these files for exact rules and templates.
 
-| Skill | What it does |
-|-------|--------------|
-| `web-search` | How to construct queries, pick search depth, and choose output type |
-| `fetch-url` | When and how to scrape a known URL as Markdown |
-| `deep-research` | Run multi-source, sourced investigations via Linkup's async Research endpoint |
+## Skills
+
+| Skill | Use it for | Routes into |
+|-------|-----------|-------------|
+| `web-search` | Write one great search: pick depth, output type, filters; phrase the query as a retrieval plan | Query mental model + prompt optimizer |
+| `fetch-url` | Read a known URL as clean Markdown | API reference (Fetch) |
+| `deep-research` | Minutes-long, cross-checked, cited investigations (`/v1/research`) | Specialized endpoints (Research) |
+| `bulk-extract` | Many structured rows from one listing page (`/v1/extract`) | Specialized endpoints (Extract) |
+| `build-workflow` | Turn a business goal into a multi-step Linkup workflow | Workflow guide + optimizer + recipes |
 
 ## Setup
 
 1. Get a Linkup API key at [app.linkup.so](https://app.linkup.so).
-2. Set it in your environment so Cursor can read it:
+2. Set it in your environment so both the MCP server and the REST-based skills can read it:
 
 ```shell
 export LINKUP_API_KEY="your-key"
 ```
 
-The MCP server reads the key from `${env:LINKUP_API_KEY}` — no secret is stored in this repo. Restart Cursor after setting it so the server picks it up.
-
-> The `deep-research` skill also uses `LINKUP_API_KEY` for direct REST calls to the Research endpoint.
+The MCP server reads the key from `${env:LINKUP_API_KEY}` — no secret is stored in this repo. The `deep-research`, `bulk-extract`, and advanced `web-search` (structured output, domain/date filters) flows also use `LINKUP_API_KEY` for direct REST calls. Restart Cursor after setting the key.
 
 ## Install
 
@@ -34,34 +35,38 @@ Install from the Cursor Marketplace, or add the repository directly in Cursor fr
 
 ### Test locally
 
-Symlink this repo into Cursor's local plugin folder, then reload the window:
-
 ```shell
 ln -s "$(pwd)" ~/.cursor/plugins/local/linkup
 ```
 
-Restart Cursor (or run **Developer: Reload Window**) and confirm the `linkup` MCP server and the three skills appear under **Customize**.
+Restart Cursor (or run **Developer: Reload Window**) and confirm the `linkup` MCP server and the five skills appear under **Customize**.
 
 ## Usage examples
 
-- "Find Anthropic's latest funding round amount and date."
-- "Scrape https://www.datadoghq.com/pricing and extract each plan's name and price."
-- "Research and compare 2024 cloud revenue growth for Microsoft, Amazon, and Google with sources."
+- "Find Anthropic's latest funding round amount and date." → `web-search`
+- "Scrape https://www.datadoghq.com/pricing and extract each plan's name and price." → `fetch-url`
+- "Research and compare 2024 cloud revenue growth for Microsoft, Amazon, and Google with sources." → `deep-research`
+- "Extract every open role from this careers page into a table." → `bulk-extract`
+- "I have a list of companies — how should I use Linkup to enrich and prioritize them?" → `build-workflow`
 
-## Directory structure
+## What's in `reference/`
 
 ```
-linkup-cursor-plugin/
-├── .cursor-plugin/
-│   └── plugin.json        # Plugin manifest
-├── mcp.json               # Linkup MCP server (search + fetch tools)
-├── skills/
-│   ├── web-search/
-│   ├── fetch-url/
-│   └── deep-research/
-└── README.md
+reference/
+├── knowledge/
+│   ├── LINKUP_API_REFERENCE.md              # endpoints, output types, depth, auth
+│   ├── LINKUP_AGENT_QUERY_MENTAL_MODEL.md   # reason to the right request shape
+│   ├── LINKUP_PROMPT_OPTIMIZER_KNOWLEDGE.md # exact depth rules, templates, bad patterns
+│   ├── LINKUP_WORKFLOW_GUIDE.md             # 8 workflow patterns + vertical playbooks
+│   ├── LINKUP_WORKFLOW_OPTIMIZER_KNOWLEDGE.md # assemble a goal into steps
+│   └── LINKUP_SPECIALIZED_ENDPOINTS.md      # /research and /extract
+└── workflows/                               # 18 recipes: sales, marketing, research
 ```
+
+## Credits
+
+Knowledge pack and workflow recipes from [LinkupPlatform/linkup-for-agents](https://github.com/LinkupPlatform/linkup-for-agents). Plugin format by Cursor.
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).

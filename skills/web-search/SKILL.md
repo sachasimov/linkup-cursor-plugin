@@ -1,90 +1,46 @@
 ---
 name: web-search
-description: Use this skill whenever you need real-time information from the web via Linkup — company research, news, pricing, data enrichment, fact-checking, or anything not in the codebase. Teaches how to construct queries, pick search depth, and choose the right output type using the Linkup MCP `linkup-search` tool.
+description: Use whenever you need real-time information from the web via Linkup — company research, news, pricing, facts, data enrichment, verification, or anything not in the codebase. Teaches how to choose the request shape (depth, output type, filters) and write the query as a retrieval plan. Uses the Linkup `linkup-search` MCP tool, or the REST Search API for structured output and domain/date filters.
 ---
 
 # Linkup Web Search
 
-Linkup is an agentic web search API. It interprets a natural-language instruction and runs the retrieval steps needed to return accurate, real-time web data. This plugin exposes it through the `linkup-search` tool (and `linkup-fetch`; see the `fetch-url` skill).
+Linkup is a web search API for agents: it turns a natural-language instruction into retrieval actions (web search, scraping, LinkedIn, and more) and returns accurate, cited, real-time results.
 
-Do the reasoning and synthesis yourself. Tell Linkup **what to find and where to look** — not what conclusion to reach.
+A Linkup query is an **instruction to a retrieval system**, not a question to answer. Optimize for *what to find and where*, then do the synthesis yourself.
 
-## 1. Reason before you query
+## How to call it
 
-Answer three questions in order. Each answer constrains the next.
+- For most searches, use the **`linkup-search` MCP tool** (this plugin bundles it): pass a natural-language query and a `depth`.
+- For **structured JSON output**, **domain filters** (`includeDomains`/`excludeDomains`), or **date filters** (`fromDate`/`toDate`), call the **REST Search API** directly, since those go beyond the MCP tool. Requires `LINKUP_API_KEY`:
 
-**What inputs do I already have?**
-
-| I have... | Then... |
-| --- | --- |
-| A specific URL | Scrape it directly with `fetch-url` — don't waste a search finding it |
-| A company name, topic, or question (no URL) | You need to search |
-| Both a URL and a broader question | Combine: scrape the known URL + search for the rest |
-
-**Where does the data live?**
-
-| The data is... | Example | Then... |
-| --- | --- | --- |
-| In search snippets (titles, short facts) | A funding amount, a launch date, a job title | `standard` is enough |
-| On full pages (tables, specs, long-form) | A pricing table, an article body | You must **scrape** the page → likely `deep` |
-| Not sure | — | Default to `deep` |
-
-**Do I need to chain steps?**
-
-| Scenario | Sequential? | Depth |
-| --- | --- | --- |
-| Everything can be gathered in parallel searches | No | `standard` |
-| I have one URL and just need to scrape it | No | `standard` (or `fetch-url`) |
-| I must find URLs first, then scrape them | Yes | `deep` |
-| I must scrape a page, then search again on what I found | Yes | `deep` |
-| I must scrape multiple known URLs | Yes | `deep` |
-
-## 2. Choose depth
-
-- **`standard`** — runs multiple parallel searches; can scrape **one** URL provided in the prompt. Cannot scrape multiple URLs or follow URLs discovered mid-search.
-- **`deep`** — up to ~10 iterative passes; can scrape multiple URLs and chain search → scrape.
-
-When uncertain, default to `deep`.
-
-Cost tip: 3–5 focused `standard` calls in parallel are often faster and cheaper than one `deep` call. Reserve `deep` for scraping multiple URLs or chaining search → scrape.
-
-## 3. Choose output type
-
-| Output | Returns | Use when |
-| --- | --- | --- |
-| `searchResults` | `{name, url, content}` sources | You will filter/synthesize the results yourself |
-| `sourcedAnswer` | Natural-language answer + sources | The answer is shown directly to the user |
-| `structured` | JSON matching a schema you provide | Results feed an automated pipeline |
-
-Default to `searchResults` when you'll process results yourself.
-
-## 4. Write effective queries
-
-**Be specific.** Add dates ("Q4 2025"), locations ("French company Total"), versions ("since React 19"), domains ("on sec.gov").
-
-| Bad | Good |
-| --- | --- |
-| "Tell me about the company" | "Find {company}'s annual revenue and employee count" |
-| "Microsoft revenue" | "Microsoft fiscal year 2024 total revenue" |
-| "AI news" | "OpenAI product announcements January 2026" |
-
-**Keyword-style** for simple facts: `"NVIDIA Q4 2024 revenue"`.
-
-**Instruction-style** for extraction: `"Find Datadog's pricing page. Extract plan names, per-host prices, and included features per tier."`
-
-**Ask for breadth** (works even in `standard`): `"Find recent news about OpenAI. Run several searches with adjacent keywords: 'OpenAI funding', 'OpenAI product launch', 'OpenAI partnerships'."`
-
-**Chain sequentially** (deep only): `"First find Snowflake's LinkedIn company page. Then scrape it and extract employee count, HQ, industry, and description."`
-
-## 5. Filters — only when asked
-
-Apply `includeDomains` / `excludeDomains` and `fromDate` / `toDate` only when the user or task implies that constraint. Don't add them speculatively.
-
-## Quick reference
-
+```shell
+curl -sS -X POST "https://api.linkup.so/v1/search" \
+  -H "Authorization: Bearer $LINKUP_API_KEY" -H "Content-Type: application/json" \
+  -d '{"q":"...","depth":"standard","outputType":"searchResults"}'
 ```
-STANDARD  parallel searches ✓  scrape one provided URL ✓  scrape many ✗  chain search→scrape ✗
-DEEP      iterative passes ✓   scrape many URLs ✓         chain search→scrape ✓
-UNCERTAIN default to deep
-OUTPUT    searchResults (raw) | sourcedAnswer (user-facing) | structured (JSON schema)
-```
+
+## Choose the request shape BEFORE writing the query
+
+Decide in this order (do not start by writing `q`):
+
+1. **Depth** — `fast` (one simple, latency-sensitive lookup; snippets enough), `standard` (independent searches / one known-URL scrape, all planned upfront), `deep` (a URL must be discovered *then* scraped, or multiple pages need follow-up reading). When uncertain, use `deep`.
+2. **Output type** — `searchResults` (you'll inspect/synthesize sources), `sourcedAnswer` (a human needs a direct cited answer), `structured` (software needs fields — always include a `structuredOutputSchema`).
+3. **Hard filters** — set `includeDomains`, `excludeDomains`, `fromDate`, `toDate` only when the source family or timeframe is actually implied. Never invent domains.
+4. **Independent vs sequential** — `standard` fans out independent work in parallel; `deep` reuses earlier results in later steps.
+
+## Write the query as a retrieval plan
+
+Make the plan visible: target entity/URL, the retrieval action (find/scrape/count/compare), the source scope, the exact fields to return, ordering (deep only), and "return source URLs / say none found." Name distinct facets rather than rewording the same search. Quote and disambiguate ambiguous names (`"Clause AI" legal-tech startup`).
+
+Key rule: **`standard` cannot discover a URL and then scrape it in the same call** — use `deep` ("first find the official page, then scrape it") or split into two calls.
+
+## Read the full knowledge before non-trivial queries
+
+This skill is the summary. For exact depth behavior, query templates, source-constraint rules, LinkedIn wording, local-place rules, and known bad patterns, read these bundled files at the plugin root:
+
+- `reference/knowledge/LINKUP_AGENT_QUERY_MENTAL_MODEL.md` — how to reason from a data request to the right request shape.
+- `reference/knowledge/LINKUP_PROMPT_OPTIMIZER_KNOWLEDGE.md` — the detailed rulebook: depth rules, templates, filters, LinkedIn, bad patterns.
+- `reference/knowledge/LINKUP_API_REFERENCE.md` — endpoints, output types, auth, examples.
+
+For scraping a known URL, use the `fetch-url` skill. For minutes-long multi-source investigations, use `deep-research`. For bulk structured records from one listing page, use `bulk-extract`. To turn a business goal into a multi-step workflow, use `build-workflow`.
