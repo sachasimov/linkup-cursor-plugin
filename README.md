@@ -22,6 +22,10 @@ This plugin ships:
 | `bulk-extract` | Many structured rows from one listing page (`/v1/extract`) | Specialized endpoints (Extract) |
 | `build-workflow` | Turn a business goal into a multi-step Linkup workflow | Workflow guide + optimizer + recipes |
 
+## Remote vs local MCP
+
+The plugin runs Linkup's MCP server **locally via `npx`** (stdio). Linkup also offers a [hosted remote endpoint](https://docs.linkup.so/pages/integrations/mcp/mcp#remote-mcp), which is the docs' recommended default, but it does **not** currently work inside Cursor: Cursor's streamable-HTTP client opens a session SSE stream and the hosted endpoint answers `HTTP 404` (a compliant server should return `405`), so Cursor drops the connection. The local stdio server avoids this and exposes the same four tools. See `/linkup-setup` for the remote config to use once the endpoint is fixed.
+
 ## Commands
 
 Invoke any of these in chat: `/linkup-search <query>`, `/linkup-fetch <url>`, `/linkup-deep-research <question>`, `/linkup-extract <url> <what>`, `/linkup-workflow <goal>`, `/linkup-setup`.

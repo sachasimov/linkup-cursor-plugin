@@ -49,7 +49,23 @@ The plugin ships this `mcp.json` at its root (auto-discovered). It runs Linkup's
 
 This exposes the `linkup-search`, `linkup-fetch`, `linkup-research`, and `linkup-get-research` tools.
 
-> Note: Linkup's hosted `https://mcp.linkup.so/mcp` endpoint (remote streamable HTTP) is not reliably compatible with Cursor's MCP client — Cursor's session/SSE requests get HTTP 404 and the transport is tombstoned. Use the local `npx` stdio server above instead.
+### Remote MCP (alternative)
+
+Linkup's docs recommend the hosted endpoint (no Node/npx needed). The docs' preferred config for Cursor, using header auth:
+
+```json
+{
+  "mcpServers": {
+    "linkup": {
+      "type": "http",
+      "url": "https://mcp.linkup.so/mcp",
+      "headers": { "Authorization": "Bearer ${env:LINKUP_API_KEY}" }
+    }
+  }
+}
+```
+
+**Known incompatibility with Cursor (as of 2026-07):** this does not currently work in Cursor. Cursor's streamable-HTTP client opens a session `GET` SSE stream, and the hosted endpoint returns **HTTP 404** for it; after 5 such responses Cursor tombstones the connection. A spec-compliant server that has no server-initiated stream should return **405 Method Not Allowed** instead (for example, Exa's hosted endpoint returns 405 and works in Cursor). This affects both the `Authorization: Bearer` and `?apiKey=` auth forms identically, so it is not an auth problem. Until the hosted endpoint returns 405 (or serves the stream), use the local `npx` stdio config above.
 
 ## Step 4 — Fully restart Cursor
 
