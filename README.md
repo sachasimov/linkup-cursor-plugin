@@ -6,7 +6,7 @@ Give Cursor reliable, real-time access to the web through [Linkup](https://www.l
 
 This plugin ships:
 
-1. **The Linkup MCP server** — adds `linkup-search` and `linkup-fetch` tools to the agent.
+1. **The Linkup MCP server** — runs locally via `npx` (Node.js v24+) and adds `linkup-search`, `linkup-fetch`, `linkup-research`, and `linkup-get-research` tools to the agent.
 2. **Five skills** — concise, on-demand entry points that teach the agent *how* to use Linkup well.
 3. **Six slash commands** — `/linkup-search`, `/linkup-fetch`, `/linkup-deep-research`, `/linkup-extract`, `/linkup-workflow`, and `/linkup-setup`.
 4. **Two rules** — an always-on awareness rule so the agent reaches for Linkup proactively, and a citation-standards rule.
@@ -37,7 +37,7 @@ Run `/linkup-setup` for a guided setup, or:
 export LINKUP_API_KEY="your-key"
 ```
 
-The MCP server reads the key from `${env:LINKUP_API_KEY}` — no secret is stored in this repo. The `deep-research`, `bulk-extract`, and advanced `web-search` (structured output, domain/date filters) flows also use `LINKUP_API_KEY` for direct REST calls. Restart Cursor after setting the key.
+The MCP server runs locally over stdio via `npx` (needs Node.js v24+) and reads the key from `${env:LINKUP_API_KEY}` — no secret is stored in this repo. The `deep-research`, `bulk-extract`, and advanced `web-search` (structured output, domain/date filters) flows also use `LINKUP_API_KEY` for direct REST calls. Fully quit and reopen Cursor after setting the key.
 
 ## Install
 

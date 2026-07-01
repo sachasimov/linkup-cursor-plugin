@@ -34,18 +34,22 @@ curl -sS -o /dev/null -w "%{http_code}\n" -X POST "https://api.linkup.so/v1/sear
 
 ## Step 3 — Confirm the MCP server config
 
-The plugin ships this `mcp.json` at its root (auto-discovered). If setting up manually without the plugin, add to `~/.cursor/mcp.json`:
+The plugin ships this `mcp.json` at its root (auto-discovered). It runs Linkup's MCP server locally over stdio via `npx`, which requires Node.js v24+. If setting up manually without the plugin, add to `~/.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "linkup": {
-      "url": "https://mcp.linkup.so/mcp?apiKey=${env:LINKUP_API_KEY}",
-      "type": "http"
+      "command": "npx",
+      "args": ["-y", "linkup-mcp-server", "apiKey=${env:LINKUP_API_KEY}"]
     }
   }
 }
 ```
+
+This exposes the `linkup-search`, `linkup-fetch`, `linkup-research`, and `linkup-get-research` tools.
+
+> Note: Linkup's hosted `https://mcp.linkup.so/mcp` endpoint (remote streamable HTTP) is not reliably compatible with Cursor's MCP client — Cursor's session/SSE requests get HTTP 404 and the transport is tombstoned. Use the local `npx` stdio server above instead.
 
 ## Step 4 — Fully restart Cursor
 
