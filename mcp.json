@@ -2,7 +2,7 @@
   "mcpServers": {
     "linkup": {
       "command": "npx",
-      "args": ["-y", "linkup-mcp-server", "apiKey=${env:LINKUP_API_KEY}"]
+      "args": ["-y", "linkup-mcp-server@latest", "apiKey=${env:LINKUP_API_KEY}"]
     }
   }
 }
