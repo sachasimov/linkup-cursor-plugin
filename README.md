@@ -1,3 +1,5 @@
+<img src="assets/wordmark.png" alt="Linkup" height="56">
+
 # Linkup plugin for Cursor
 
 Give Cursor reliable, real-time access to the web through [Linkup](https://www.linkup.so) — a web search API built for agents. It searches the live web, reads pages, runs multi-source deep research, extracts structured records, and returns cited results.
