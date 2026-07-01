@@ -34,24 +34,7 @@ curl -sS -o /dev/null -w "%{http_code}\n" -X POST "https://api.linkup.so/v1/sear
 
 ## Step 3 — Confirm the MCP server config
 
-The plugin ships this `mcp.json` at its root (auto-discovered). It runs Linkup's MCP server locally over stdio via `npx`, which requires Node.js v24+. If setting up manually without the plugin, add to `~/.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "linkup": {
-      "command": "npx",
-      "args": ["-y", "linkup-mcp-server", "apiKey=${env:LINKUP_API_KEY}"]
-    }
-  }
-}
-```
-
-This exposes the `linkup-search`, `linkup-fetch`, `linkup-research`, and `linkup-get-research` tools.
-
-### Remote MCP (alternative)
-
-Linkup's docs recommend the hosted endpoint (no Node/npx needed). The docs' preferred config for Cursor, using header auth:
+The plugin ships this `mcp.json` at its root (auto-discovered). It uses Linkup's hosted remote endpoint with header auth. If setting up manually without the plugin, add to `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -65,7 +48,22 @@ Linkup's docs recommend the hosted endpoint (no Node/npx needed). The docs' pref
 }
 ```
 
-**Known incompatibility with Cursor (as of 2026-07):** this does not currently work in Cursor. Cursor's streamable-HTTP client opens a session `GET` SSE stream, and the hosted endpoint returns **HTTP 404** for it; after 5 such responses Cursor tombstones the connection. A spec-compliant server that has no server-initiated stream should return **405 Method Not Allowed** instead (for example, Exa's hosted endpoint returns 405 and works in Cursor). This affects both the `Authorization: Bearer` and `?apiKey=` auth forms identically, so it is not an auth problem. Until the hosted endpoint returns 405 (or serves the stream), use the local `npx` stdio config above.
+This exposes the `linkup-search`, `linkup-fetch`, `linkup-research`, and `linkup-get-research` tools.
+
+### Local MCP fallback (npx / stdio)
+
+If the hosted endpoint gets tombstoned in your Cursor with repeated SSE `404`s (older versions of the hosted endpoint return `404` instead of the spec-compliant `405` for the optional server stream, which Cursor treats as a dead session), run the MCP server locally instead. Needs Node.js v24+:
+
+```json
+{
+  "mcpServers": {
+    "linkup": {
+      "command": "npx",
+      "args": ["-y", "linkup-mcp-server@latest", "apiKey=${env:LINKUP_API_KEY}"]
+    }
+  }
+}
+```
 
 ## Step 4 — Fully restart Cursor
 

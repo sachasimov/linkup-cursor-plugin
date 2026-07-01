@@ -8,7 +8,7 @@
     "email": "support@linkup.so"
   },
   "homepage": "https://www.linkup.so",
-  "repository": "https://github.com/sachasimov/linkup-cursor-plugin",
+  "repository": "https://github.com/LinkupPlatform/linkup-cursor-plugin",
   "license": "MIT",
   "logo": "assets/logo.png",
   "keywords": ["linkup", "web-search", "search", "fetch", "scraping", "research", "extract", "enrichment", "mcp"],

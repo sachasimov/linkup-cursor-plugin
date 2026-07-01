@@ -6,7 +6,7 @@ Give Cursor reliable, real-time access to the web through [Linkup](https://www.l
 
 This plugin ships:
 
-1. **The Linkup MCP server** — runs locally via `npx` (Node.js v24+) and adds `linkup-search`, `linkup-fetch`, `linkup-research`, and `linkup-get-research` tools to the agent.
+1. **The Linkup MCP server** — connects to Linkup's hosted endpoint and adds `linkup-search`, `linkup-fetch`, `linkup-research`, and `linkup-get-research` tools to the agent (a local `npx` fallback is available; see below).
 2. **Five skills** — concise, on-demand entry points that teach the agent *how* to use Linkup well.
 3. **Six slash commands** — `/linkup-search`, `/linkup-fetch`, `/linkup-deep-research`, `/linkup-extract`, `/linkup-workflow`, and `/linkup-setup`.
 4. **Two rules** — an always-on awareness rule so the agent reaches for Linkup proactively, and a citation-standards rule.
@@ -24,7 +24,9 @@ This plugin ships:
 
 ## Remote vs local MCP
 
-The plugin runs Linkup's MCP server **locally via `npx`** (stdio). Linkup also offers a [hosted remote endpoint](https://docs.linkup.so/pages/integrations/mcp/mcp#remote-mcp), which is the docs' recommended default, but it does **not** currently work inside Cursor: Cursor's streamable-HTTP client opens a session SSE stream and the hosted endpoint answers `HTTP 404` (a compliant server should return `405`), so Cursor drops the connection. The local stdio server avoids this and exposes the same four tools. See `/linkup-setup` for the remote config to use once the endpoint is fixed.
+The plugin uses Linkup's [hosted remote MCP endpoint](https://docs.linkup.so/pages/integrations/mcp/mcp#remote-mcp) — the recommended setup, with no Node/npx dependency. It authenticates with the `Authorization: Bearer ${env:LINKUP_API_KEY}` header.
+
+If your Cursor connection to the hosted endpoint gets tombstoned with repeated SSE `404`s (a known issue with older versions of the hosted endpoint, which should return `405` for the optional server stream), use the **local `npx` fallback** instead — it runs `linkup-mcp-server` locally over stdio (needs Node.js v24+) and exposes the same four tools. See `/linkup-setup` for both configs.
 
 ## Commands
 
@@ -41,7 +43,7 @@ Run `/linkup-setup` for a guided setup, or:
 export LINKUP_API_KEY="your-key"
 ```
 
-The MCP server runs locally over stdio via `npx` (needs Node.js v24+) and reads the key from `${env:LINKUP_API_KEY}` — no secret is stored in this repo. The `deep-research`, `bulk-extract`, and advanced `web-search` (structured output, domain/date filters) flows also use `LINKUP_API_KEY` for direct REST calls. Fully quit and reopen Cursor after setting the key.
+The MCP server reads the key from `${env:LINKUP_API_KEY}` (sent as an `Authorization: Bearer` header) — no secret is stored in this repo. The `deep-research`, `bulk-extract`, and advanced `web-search` (structured output, domain/date filters) flows also use `LINKUP_API_KEY` for direct REST calls. Fully quit and reopen Cursor after setting the key.
 
 ## Install
 
