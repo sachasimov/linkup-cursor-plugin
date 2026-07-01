@@ -2,7 +2,7 @@
   "name": "linkup",
   "displayName": "Linkup",
   "version": "0.3.0",
-  "description": "Real-time web access for agents via Linkup: search, fetch, deep research, and bulk extract (MCP) plus skills, commands, an always-on awareness rule, and a bundled knowledge pack that teach agents to write great queries and assemble multi-step web workflows.",
+  "description": "Real-time web search, fetch, and deep research for Cursor agents, powered by Linkup.",
   "author": {
     "name": "Linkup",
     "email": "support@linkup.so"

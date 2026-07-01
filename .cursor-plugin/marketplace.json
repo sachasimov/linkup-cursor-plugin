@@ -7,7 +7,7 @@
     {
       "name": "linkup",
       "source": "./",
-      "description": "Real-time web search, fetch, deep research, and bulk extract for Cursor agents, powered by Linkup."
+      "description": "Real-time web search, fetch, and deep research for Cursor agents, powered by Linkup."
     }
   ]
 }
