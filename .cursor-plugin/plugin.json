@@ -1,0 +1,12 @@
+{
+  "name": "linkup",
+  "version": "0.1.0",
+  "description": "Linkup agentic web search & fetch (MCP) plus skills that teach agents how to search, scrape, and run deep research on the live web.",
+  "author": {
+    "name": "Linkup"
+  },
+  "homepage": "https://linkup.so",
+  "repository": "https://github.com/LinkupPlatform/linkup-cursor-plugin",
+  "license": "MIT",
+  "keywords": ["linkup", "web-search", "search", "fetch", "scraping", "research", "mcp"]
+}

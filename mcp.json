@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "linkup": {
+      "url": "https://mcp.linkup.so/mcp?apiKey=${env:LINKUP_API_KEY}",
+      "type": "http"
+    }
+  }
+}
