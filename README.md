@@ -2,11 +2,13 @@
 
 Give Cursor reliable, real-time access to the web through [Linkup](https://www.linkup.so) — a web search API built for agents. It searches the live web, reads pages, runs multi-source deep research, extracts structured records, and returns cited results.
 
-This plugin ships three things:
+This plugin ships:
 
 1. **The Linkup MCP server** — adds `linkup-search` and `linkup-fetch` tools to the agent.
 2. **Five skills** — concise, on-demand entry points that teach the agent *how* to use Linkup well.
-3. **A bundled knowledge pack** (`reference/`) — the full query, endpoint, and workflow knowledge from [linkup-for-agents](https://github.com/LinkupPlatform/linkup-for-agents), plus 18 ready-to-adapt workflow recipes. The skills route into these files for exact rules and templates.
+3. **Six slash commands** — `/linkup-search`, `/linkup-fetch`, `/linkup-deep-research`, `/linkup-extract`, `/linkup-workflow`, and `/linkup-setup`.
+4. **Two rules** — an always-on awareness rule so the agent reaches for Linkup proactively, and a citation-standards rule.
+5. **A bundled knowledge pack** (`reference/`) — the full query, endpoint, and workflow knowledge from [linkup-for-agents](https://github.com/LinkupPlatform/linkup-for-agents), plus 18 ready-to-adapt workflow recipes. The skills route into these files for exact rules and templates.
 
 ## Skills
 
@@ -18,7 +20,13 @@ This plugin ships three things:
 | `bulk-extract` | Many structured rows from one listing page (`/v1/extract`) | Specialized endpoints (Extract) |
 | `build-workflow` | Turn a business goal into a multi-step Linkup workflow | Workflow guide + optimizer + recipes |
 
+## Commands
+
+Invoke any of these in chat: `/linkup-search <query>`, `/linkup-fetch <url>`, `/linkup-deep-research <question>`, `/linkup-extract <url> <what>`, `/linkup-workflow <goal>`, `/linkup-setup`.
+
 ## Setup
+
+Run `/linkup-setup` for a guided setup, or:
 
 1. Get a Linkup API key at [app.linkup.so](https://app.linkup.so).
 2. Set it in your environment so both the MCP server and the REST-based skills can read it:
