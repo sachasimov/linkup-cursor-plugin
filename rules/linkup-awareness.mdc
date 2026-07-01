@@ -1,0 +1,19 @@
+---
+description: "Contextual awareness for Linkup web tools — reach for Linkup whenever a request needs live, real-world data, a known page's content, a multi-source investigation, bulk records, or a web-powered workflow."
+globs:
+alwaysApply: true
+---
+
+# Linkup Awareness
+
+You have access to Linkup, a web search API for agents, via the `linkup` MCP server (tools `linkup-search` and `linkup-fetch`), plus REST endpoints for research and extraction. Do not answer from memory when live or verifiable web data would be better — use Linkup, and cite sources.
+
+Route by intent:
+
+- **Current or verifiable facts, news, prices, company/market info, code/docs** → use `linkup-search` (see the `web-search` skill for depth, output type, and query construction). Prefer this over guessing from training data.
+- **A specific URL to read** (article, pricing page, docs, PDF) → use `linkup-fetch` (see `fetch-url`).
+- **A minutes-long, cross-checked investigation or report** (due diligence, market landscape, "compare X across many entities") → use the `deep-research` skill (`/v1/research`).
+- **Many structured rows from one listing page** (team, catalog, jobs, directory) → use the `bulk-extract` skill (`/v1/extract`).
+- **A business goal rather than a single query** ("enrich my leads", "track competitors", "how can I use Linkup?") → use the `build-workflow` skill.
+
+Always preserve and surface the source URLs Linkup returns so every claim can be verified. Never invent URLs, domains, or facts. If Linkup finds nothing relevant, say so rather than filling the gap from memory.

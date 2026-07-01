@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Linkup">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#g)"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M104 152l48-48"/>
+    <path d="M132 76l16-16a40 40 0 0 1 56 56l-16 16a40 40 0 0 1-56 0"/>
+    <path d="M124 180l-16 16a40 40 0 0 1-56-56l16-16a40 40 0 0 1 56 0"/>
+  </g>
+</svg>

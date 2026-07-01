@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Use for multi-source investigations that need a thorough, cross-checked, cited answer or report and can run for minutes — due diligence, market landscapes, "compare X across many entities", verified fact-finding. Uses Linkup's async /v1/research REST endpoint. Requires LINKUP_API_KEY. For quick lookups use web-search; for bulk records from a page use bulk-extract.
+description: ONLY when the user explicitly wants a thorough, exhaustive, or comprehensive multi-source investigation or report that can run for minutes — due diligence, market landscapes, "compare X across many entities", verified fact-finding. Slower and more expensive than web-search. For normal lookups and research use web-search instead; for bulk records from a page use bulk-extract. Uses Linkup's async /v1/research REST endpoint. Requires LINKUP_API_KEY.
 ---
 
 # Linkup Deep Research

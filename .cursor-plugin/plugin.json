@@ -1,12 +1,19 @@
 {
   "name": "linkup",
-  "version": "0.2.0",
-  "description": "Real-time web access for agents via Linkup: search, fetch, deep research, and bulk extract (MCP) plus skills and a bundled knowledge pack that teach agents to write great queries and assemble multi-step web workflows.",
+  "displayName": "Linkup",
+  "version": "0.3.0",
+  "description": "Real-time web access for agents via Linkup: search, fetch, deep research, and bulk extract (MCP) plus skills, commands, an always-on awareness rule, and a bundled knowledge pack that teach agents to write great queries and assemble multi-step web workflows.",
   "author": {
-    "name": "Linkup"
+    "name": "Linkup",
+    "email": "support@linkup.so"
   },
   "homepage": "https://www.linkup.so",
   "repository": "https://github.com/sachasimov/linkup-cursor-plugin",
   "license": "MIT",
-  "keywords": ["linkup", "web-search", "search", "fetch", "scraping", "research", "extract", "enrichment", "mcp"]
+  "logo": "assets/logo.svg",
+  "keywords": ["linkup", "web-search", "search", "fetch", "scraping", "research", "extract", "enrichment", "mcp"],
+  "skills": "./skills/",
+  "rules": "./rules/",
+  "commands": "./commands/",
+  "mcpServers": "mcp.json"
 }

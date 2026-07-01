@@ -1,0 +1,32 @@
+---
+description: Citation standards for presenting Linkup web results. Applied when reporting findings from search, fetch, research, or extraction.
+alwaysApply: false
+---
+
+# Citation Standards
+
+When you present information gathered from Linkup:
+
+## Inline citations
+
+- Every factual claim must carry an inline citation as a markdown link: `[Source Title](URL)`.
+- Only cite URLs that appear in the Linkup output — never invent, guess, or reconstruct a URL.
+- Do not leave any fact, number, name, or date uncited.
+
+## Response structure
+
+- Lead with the key answer or finding.
+- Include specific facts, figures, and dates.
+- Organize by theme when covering multiple topics.
+
+## Sources section
+
+End every web-sourced response with a `Sources` section listing each URL referenced, with a date when available:
+
+```
+Sources:
+- [Source Title](https://example.com/article) (Feb 2026)
+- [Another Source](https://example.com/other) (Jan 2026)
+```
+
+This section is mandatory for web-sourced answers. If a claim cannot be backed by a returned source, state that it is unverified rather than presenting it as fact.
